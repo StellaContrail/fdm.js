@@ -114,13 +114,13 @@ console.log(h(2) - 2);</code></pre>
 
         // gradient
         const g = fdm.grad(f);
-        console.log(g(1) - 2*1); // --- 4.440892098500626e-16 ~ 0.0
-        console.log(g(2) - 2*2); // --- 8.881784197001252e-16 ~ 0.0
+        console.log(g(1) - 2*1);
+        console.log(g(2) - 2*2);
 
         // laplacian
         const h = fdm.lap(f);
-        console.log(h(1) - 2); // --- 2.353672812205332e-14 ~ 0.0
-        console.log(h(2) - 2); // --- 1.3322676295501878e-15 ~ 0.0
+        console.log(h(1) - 2);
+        console.log(h(2) - 2);
     &lt;/script&gt;
   &lt;/body&gt;
 &lt;/html&gt;</code></pre>
@@ -135,11 +135,12 @@ console.log(h(2) - 2);</code></pre>
       </div>
     </div>
     <script>
-      const f = x => Math.exp(0.11 * x) * Math.sin(x);
-      const df = x => Math.exp(0.11 * x) * (0.11 * Math.sin(x) + Math.cos(x));
-
       function main() {
-        const fdm = new FDM(0.1);
+        const f = x => Math.exp(0.11 * x) * Math.sin(x);
+        const df = x => Math.exp(0.11 * x) * (0.11 * Math.sin(x) + Math.cos(x));
+
+        const fdm = new FDM(0.01);
+        fdm.accuracy = 2;
         const dh = fdm.dh;
         const g = fdm.grad(f);
         
@@ -147,10 +148,10 @@ console.log(h(2) - 2);</code></pre>
         const ymin = -3; const ymax = +3;
 
         const a = []; const b = [];
-        for (i = 0; xmin + i * dh <= xmax; i++) {
+        for (let i = 0; xmin + i * dh <= xmax; i++) {
           a[i] = xmin + i * dh;
         }
-        for (i = 0; ymin + i * dh <= ymax; i++) {
+        for (let i = 0; ymin + i * dh <= ymax; i++) {
           b[i] = ymin + i * dh;
         }
 

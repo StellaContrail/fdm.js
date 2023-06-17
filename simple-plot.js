@@ -29,7 +29,7 @@ class SimplePlot {
       // graph
       context.beginPath();
       context.strokeStyle = lineColor;
-      for (i = 0; i < a.length; i++) {
+      for (let i = 0; i < a.length; i++) {
         let x = a[i];
         const xmin = a[0]; const xmax = a[a.length - 1];
         const ymin = b[0]; const ymax = b[b.length - 1];
