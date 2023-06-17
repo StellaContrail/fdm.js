@@ -12,6 +12,8 @@ class FDM {
   }
 
   get accuracy() { return this.#acc; }
+
+  get order() { return Math.pow(this.dh, this.#acc * 2); }
   
   constructor(dh = 0.5) { this.dh = dh; }
 
