@@ -46,19 +46,19 @@ const g = fdm.grad(f);</code></pre>
           <h2>Introduction</h2>
           <div class="row">
             <p>
-              The fdm.js is a simple javascript library which lets you calculate 1st and 2nd derivatives of the user-defined functions.
-              It uses <span class="fw-bold">Finite Difference Method</span> (FDM), a differentiation technique commonly used in computer simulation.
+              The fdm.js is a simple JavaScript library that enables you to calculate the 1st and 2nd derivatives of user-defined functions.
+              It utilizes the <span class="fw-bold">Finite Difference Method</span> (FDM), which is a commonly employed differentiation technique in computer simulation.
             </p>
             <p>
-              This library aims at "easy to use" and "lightweight" ability. 
-              Developers should now have more ability to make numerical simulations in the quick and easy way.
+              This library focuses on being "easy to use" and "lightweight."
+              Developers now have enhanced capabilities for conducting numerical simulations quickly and effortlessly.
             </p>
           </div>
 
-          <h2>Usage</h2>
+          <h2>Tutorial</h2>
           <div class="row">
             <p>
-              First, you need to link fdm.js to your page by adding the following line to HTML header.
+              First, link fdm.js to your page by adding the following line to HTML header.
             </p>
             <div class="mx-auto">
               <pre><code class="html">&lt;script src="fdm.js"&gt;&lt;/script&gt;</code></pre>
@@ -72,11 +72,21 @@ const g = fdm.grad(f);</code></pre>
             </div>
 
             <p>
-              Create a fdm.js instance and set step size.
+              Create an instance of fdm.js and set the step size.
             </p>
             <div class="mx-auto">
               <pre><code class="javascript">const fdm = new FDM();
 fdm.dh = 0.1;</code></pre>
+            </div>
+
+            <p>
+              You can also specify `fdm.accuracy` to increase the accuracy.
+              e.g. <code>fdm.accuracy = 1, 2, 3, ...</code>
+              <br>
+              The algorithm is derived from <a href="https://doi.org/10.1090%2FS0025-5718-1988-0935077-0">Bengt(1988)</a>.
+            </p>
+            <div class="mx-auto">
+              <pre><code class="javascript">fdm.accuracy = 2;</code></pre>
             </div>
           </div>
 
@@ -94,7 +104,7 @@ console.log(h(2) - 2);</code></pre>
           </div>
 
           <p>
-            The above example is a one-dimensional case, but this library can support up to three-dimension.
+            The above example illustrates a one-dimensional case, but this library can support up to three dimensions.
           </p>
 
           <h4>RESULT CODE</h4>
@@ -111,6 +121,7 @@ console.log(h(2) - 2);</code></pre>
         // setup fdm.js
         const fdm = new FDM();
         fdm.dh = 0.1;
+        fdm.accuracy = 2;
 
         // gradient
         const g = fdm.grad(f);
@@ -125,6 +136,47 @@ console.log(h(2) - 2);</code></pre>
   &lt;/body&gt;
 &lt;/html&gt;</code></pre>
           </div>
+          
+          <h2>Examples</h2>
+          <div class="row">
+            <p>The following examples are calculated by fdm.js.</p>
+          </div>
+          <div class="row">
+            <h4>Polynomial Function</h4>
+            <canvas id="ex_polynomial" style="border: 1px solid rgb(168, 168, 168);">Canvas is not supported in your browser.</canvas>
+          </div>
+          <div class="row">
+            <p>
+              Fig. 2. Comparison of analytical and numerical solution of f(x) = x**3.
+            </p>
+          </div>
+          <div class="row">
+            <h4>Square Root</h4>
+            <canvas id="ex_sqrt_x" style="border: 1px solid rgb(168, 168, 168);">Canvas is not supported in your browser.</canvas>
+          </div>
+          <div class="row">
+            <p>
+              Fig. 3. Comparison of analytical and numerical solution of f(x) = sqrt(x).
+            </p>
+          </div>
+          <div class="row">
+            <h4>Exponential Function</h4>
+            <canvas id="ex_exponential" style="border: 1px solid rgb(168, 168, 168);">Canvas is not supported in your browser.</canvas>
+          </div>
+          <div class="row">
+            <p>
+              Fig. 4. Comparison of analytical and numerical solution of f(x) = exp(x).
+            </p>
+          </div>
+          <div class="row">
+            <h4>Sinusoidal Function</h4>
+            <canvas id="ex_sinusoidal" style="border: 1px solid rgb(168, 168, 168);">Canvas is not supported in your browser.</canvas>
+          </div>
+          <div class="row">
+            <p>
+              Fig. 4. Comparison of analytical and numerical solution of f(x) = sin(x).
+            </p>
+          </div>
 
           <h2>License</h2>
           <div class="row">
@@ -136,6 +188,14 @@ console.log(h(2) - 2);</code></pre>
     </div>
     <script>
       function main() {
+        draw_fig1();
+        draw_fig2();
+        draw_fig3();
+        draw_fig4();
+        draw_fig5();
+      }
+
+      function draw_fig1() {
         const f = x => Math.exp(0.11 * x) * Math.sin(x);
         const df = x => Math.exp(0.11 * x) * (0.11 * Math.sin(x) + Math.cos(x));
 
@@ -158,6 +218,118 @@ console.log(h(2) - 2);</code></pre>
         const sp = new SimplePlot("canvas");
         const plots = [];
         plots[0] = { func: f, color: '#64DB8F', legend: 'f(x) = exp(0.11x) sin(x)' };
+        plots[1] = { func: g, color: '#F9F790', legend: 'FDM.grad(f)' };
+        plots[2] = { func: df, color: '#DB7307', style: [10, 5], legend: 'Theoretical df/dx' };
+        sp.draw(plots, a, b);
+      }
+
+      function draw_fig2() {
+        const f = x => x * x * x;
+        const df = x => 3 * x * x;
+
+        const fdm = new FDM(0.1);
+        fdm.accuracy = 1;
+        const dh = fdm.dh;
+        const g = fdm.grad(f);
+        
+        const xmin = -4; const xmax = +4;
+        const ymin = -3; const ymax = +3;
+
+        const a = []; const b = [];
+        for (let i = 0; xmin + i * dh <= xmax; i++) {
+          a[i] = xmin + i * dh;
+        }
+        for (let i = 0; ymin + i * dh <= ymax; i++) {
+          b[i] = ymin + i * dh;
+        }
+
+        const sp = new SimplePlot("ex_polynomial");
+        const plots = [];
+        plots[0] = { func: f, color: '#64DB8F', legend: 'f(x) = x**3' };
+        plots[1] = { func: g, color: '#F9F790', legend: 'FDM.grad(f)' };
+        plots[2] = { func: df, color: '#DB7307', style: [10, 5], legend: 'Theoretical df/dx' };
+        sp.draw(plots, a, b);
+      }
+      
+      function draw_fig3() {
+        const f = x => Math.sqrt(x);
+        const df = x => 0.5 / Math.sqrt(x);
+
+        const fdm = new FDM(0.01);
+        fdm.accuracy = 1;
+        const dh = fdm.dh;
+        const g = fdm.grad(f);
+        
+        const xmin = 0; const xmax = +1;
+        const ymin = 0; const ymax = +1;
+
+        const a = []; const b = [];
+        for (let i = 0; xmin + i * dh <= xmax; i++) {
+          a[i] = xmin + i * dh;
+        }
+        for (let i = 0; ymin + i * dh <= ymax; i++) {
+          b[i] = ymin + i * dh;
+        }
+
+        const sp = new SimplePlot("ex_sqrt_x");
+        const plots = [];
+        plots[0] = { func: f, color: '#64DB8F', legend: 'f(x) = sqrt(x)' };
+        plots[1] = { func: g, color: '#F9F790', legend: 'FDM.grad(f)' };
+        plots[2] = { func: df, color: '#DB7307', style: [10, 5], legend: 'Theoretical df/dx' };
+        sp.draw(plots, a, b);
+      }
+
+      function draw_fig4() {
+        const f = x => Math.exp(x);
+        const df = x => Math.exp(x);
+
+        const fdm = new FDM(0.01);
+        fdm.accuracy = 1;
+        const dh = fdm.dh;
+        const g = fdm.grad(f);
+        
+        const xmin = -3; const xmax = +5;
+        const ymin = -1; const ymax = +40;
+
+        const a = []; const b = [];
+        for (let i = 0; xmin + i * dh <= xmax; i++) {
+          a[i] = xmin + i * dh;
+        }
+        for (let i = 0; ymin + i * dh <= ymax; i++) {
+          b[i] = ymin + i * dh;
+        }
+
+        const sp = new SimplePlot("ex_exponential");
+        const plots = [];
+        plots[0] = { func: f, color: '#64DB8F', legend: 'f(x) = exp(x)' };
+        plots[1] = { func: g, color: '#F9F790', legend: 'FDM.grad(f)' };
+        plots[2] = { func: df, color: '#DB7307', style: [10, 5], legend: 'Theoretical df/dx' };
+        sp.draw(plots, a, b);
+      }
+
+      function draw_fig5() {
+        const f = x => Math.sin(x);
+        const df = x => Math.cos(x);
+
+        const fdm = new FDM(0.01);
+        fdm.accuracy = 1;
+        const dh = fdm.dh;
+        const g = fdm.grad(f);
+        
+        const xmin = -3 * 3.14; const xmax = +3 * 3.14;
+        const ymin = -2; const ymax = +2;
+
+        const a = []; const b = [];
+        for (let i = 0; xmin + i * dh <= xmax; i++) {
+          a[i] = xmin + i * dh;
+        }
+        for (let i = 0; ymin + i * dh <= ymax; i++) {
+          b[i] = ymin + i * dh;
+        }
+
+        const sp = new SimplePlot("ex_sinusoidal");
+        const plots = [];
+        plots[0] = { func: f, color: '#64DB8F', legend: 'f(x) = sin(x)' };
         plots[1] = { func: g, color: '#F9F790', legend: 'FDM.grad(f)' };
         plots[2] = { func: df, color: '#DB7307', style: [10, 5], legend: 'Theoretical df/dx' };
         sp.draw(plots, a, b);
